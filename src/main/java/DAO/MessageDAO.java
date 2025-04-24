@@ -68,8 +68,17 @@ public class MessageDAO {
         preparedStatement.setString(3, message.getMessage_text());
         preparedStatement.setLong(4, message.getTime_posted_epoch());
 
-        int rowsAffected = preparedStatement.exewexecuteUpdate();
+        int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected > 0) {
+            
+            String sql2 = "SELECT * FROM message WHERE message_id = ?;";
+            
+            PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
+    
+            preparedStatement2.setInt(1, message.getMessage_id());
+            preparedStatement2.setInt(2, message.getPosted_by());
+            preparedStatement2.setString(3, message.getMessage_text());
+            preparedStatement2.setLong(4, message.getTime_posted_epoch());
             return message;
         }
         return null;
