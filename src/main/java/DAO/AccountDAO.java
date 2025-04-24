@@ -20,8 +20,16 @@ public class AccountDAO {
 
         preparedStatement.setString(1, username);
         preparedStatement.setString(2, password);
+        int rowsAffected = preparedStatement.executeUpdate();
+        if (rowsAffected == 0){
+            return null;
+        }
+        String sql2 = "SELECT * FROM account WHERE username = ?";
+        PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
+        preparedStatement2.setString(1, username);
 
-        ResultSet rs = preparedStatement.executeUpdate();
+        ResultSet rs = preparedStatement2.executeQuery();
+        
         if (rs.next()){
             Account account = new Account(
                 rs.getInt("account_id"),
