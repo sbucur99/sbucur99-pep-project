@@ -11,11 +11,11 @@ import java.util.List;
 public class AccountService {
     public AccountDAO accountDAO;
 
-    AccountService (){
+    public AccountService (){
         accountDAO = new AccountDAO();
     }
 
-    AccountService (AccountDAO accountDAO){
+    public AccountService (AccountDAO accountDAO){
         this.accountDAO = accountDAO;
     }
 

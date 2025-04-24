@@ -10,11 +10,11 @@ import java.util.List;
 public class MessageService {
     public MessageDAO messageDAO;
 
-    MessageService (){
+    public MessageService (){
         messageDAO = new MessageDAO();
     }
 
-    MessageService (MessageDAO messageDAO){
+    public MessageService (MessageDAO messageDAO){
         this.messageDAO = messageDAO;
     }
 
