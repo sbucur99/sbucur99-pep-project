@@ -129,7 +129,7 @@ public class MessageDAO {
         return null;
     } 
 
-    public List<Message> getMessagesByUserAccountId(int user_id) throws SQLException{
+    public List<Message> getAllMessagesByUserId(int user_id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
 
