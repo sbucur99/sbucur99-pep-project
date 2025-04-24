@@ -18,15 +18,16 @@ public class AccountService {
     public AccountService (AccountDAO accountDAO){
         this.accountDAO = accountDAO;
     }
+    
 
-    public Account register(String username, String password) throws SQLException{
-        if (accountDAO.register(username, password) != null){
-            return accountDAO.register(username, password);
+    public Account register(Account account) throws SQLException{
+        if (accountDAO.register(account.username, account.password) != null){
+            return accountDAO.register(account.username, account.password);
         } 
         return null;        
     }
 
-    public Account login(String username, String password) throws SQLException{
-        return accountDAO.login(username, password);
+    public Account login(Account account) throws SQLException{
+        return accountDAO.login(account.username, account.password);
     }
 }
