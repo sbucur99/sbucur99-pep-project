@@ -39,13 +39,13 @@ public class MessageDAO {
 
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()){
-            Message book = new Message(
+            Message message = new Message(
                 rs.getInt("message_id"), 
                 rs.getInt("posted_by"), 
                 rs.getString("message_text"), 
                 rs.getInt("time_posted_epoch")
             );
-            return book;
+            return message;
         }
         return null;
     }
@@ -67,16 +67,46 @@ public class MessageDAO {
     }
 
 
-    public Message updateMessage(Message message) throws SQLException{
+    public Message updateMessage(Message message, int id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
-        String sql = "UPDATE message SET ?;";
+        String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+        preparedStatement.setString(1, message.message_text);
+        preparedStatement.setInt(2, id);
+
+        return message;
+
     }
 
     public Message deleteMessageById(int id) throws SQLException {
         Connection connection = ConnectionUtil.getConnection();
-        String sql = "SELECT * FROM message WHERE posted_by == ?;";
+
+        String sql = "SELECT * FROM message WHERE message_id = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+        preparedStatement.setInt(1, id);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        
+        if (rs.next()){
+            Message message = new Message(
+                rs.getInt("message_id"), 
+                rs.getInt("posted_by"), 
+                rs.getString("message_text"), 
+                rs.getInt("time_posted_epoch")
+            );
+            return message;
+        }
+
+        String sql2 = "DELETE FROM message WHERE message_id = ?;";
+        PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
+        preparedStatement2.setInt(1, id);
+
+        preparedStatement2.executeUpdate();
+
+        
+        return null;
     } 
 
     public List<Message> getMessagesByUserAccountId(int user_id) throws SQLException{

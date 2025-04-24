@@ -8,5 +8,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAO {
-    
+    public Account register(String username, String password) throws SQLException{
+        Connection connection = ConnectionUtil.getConnection();
+
+        if (password.length() < 4){
+            return null;
+        }
+
+        String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+
+        ResultSet rs = preparedStatement.executeUpdate();
+        if (rs.next()){
+            Account account = new Account(
+                rs.getInt("account_id"),
+                rs.getString("username"),
+                rs.getString("password")
+            );
+            return account;
+        }
+        return null;
+    }
+
+    public Account login(String username, String password) throws SQLException{
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "SELECT account WHERE username = ? AND password = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        if (rs.next()){
+            Account account = new Account(
+                rs.getInt("account_id"),
+                rs.getString("username"),
+                rs.getString("password")
+            );        
+            return account;
+        }
+        return null;
+    }
+   
 }
