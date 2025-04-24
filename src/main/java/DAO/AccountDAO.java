@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAO {
+    /**
+     * Registers user with username needing to be unique and password at least 4 characters
+     * @param username
+     * @param password
+     * @return Account object that gets created or null if fails 
+     * @throws SQLException
+     */
     public Account register(String username, String password) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
 
@@ -41,6 +48,13 @@ public class AccountDAO {
         return null;
     }
 
+    /**
+     * Logs in a user through post by verifying login info
+     * @param username
+     * @param password
+     * @return Account that gets logged in
+     * @throws SQLException
+     */
     public Account login(String username, String password) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
         String sql = "SELECT account WHERE username = ? AND password = ?";

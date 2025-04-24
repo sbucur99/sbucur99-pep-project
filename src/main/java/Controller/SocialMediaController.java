@@ -34,6 +34,7 @@ public class SocialMediaController {
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
     public Javalin startAPI() {
+        System.out.println("TESTING!!!!!!!!!!!!!!!!!!!!");
         Javalin app = Javalin.create();        
         app.post("/register", this::postRegisterHandler);
         app.post("/login", this::postAccountHandler);
@@ -45,7 +46,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.get("/accounts/{account_id}/messsages", this::getMessagesByUserIdHandler);
         app.start(8080);
-        return app;//
+        return app;
     }
     
     private void postRegisterHandler(Context ctx) throws JsonProcessingException, SQLException {

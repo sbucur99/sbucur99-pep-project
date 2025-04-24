@@ -51,6 +51,12 @@ public class MessageDAO {
     }
 
 
+    /**
+     * Creates message by inserting the object values
+     * @param message
+     * @return the Message object that was created or null
+     * @throws SQLException
+     */
     public Message createMessage(Message message) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
 
@@ -62,14 +68,20 @@ public class MessageDAO {
         preparedStatement.setString(3, message.getMessage_text());
         preparedStatement.setLong(4, message.getTime_posted_epoch());
 
-        int rowsAffected = preparedStatement.executeUpdate();
+        int rowsAffected = preparedStatement.exewexecuteUpdate();
         if (rowsAffected > 0) {
             return message;
         }
         return null;
     }
 
-
+    /**
+     * Updates the message text by a message id
+     * @param message_text
+     * @param id
+     * @return the Message object that is updated or null
+     * @throws SQLException
+     */
     public Message updateMessage(String message_text, int id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
         String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
@@ -100,6 +112,12 @@ public class MessageDAO {
 
     }
 
+    /**
+     * Deletes a message by a message id
+     * @param id
+     * @return the Message object that was deleted or null
+     * @throws SQLException
+     */
     public Message deleteMessageById(int id) throws SQLException {
         Connection connection = ConnectionUtil.getConnection();
 
