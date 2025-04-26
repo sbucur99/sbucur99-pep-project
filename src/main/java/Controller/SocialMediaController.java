@@ -45,7 +45,7 @@ public class SocialMediaController {
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.get("/accounts/{account_id}/messsages", this::getMessagesByUserIdHandler);
-        app.start(8080);
+        //app.start(8080);
         return app;
     }
     
