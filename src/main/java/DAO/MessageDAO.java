@@ -40,6 +40,10 @@ public class MessageDAO {
 
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()){
+            if (rs.getString("message_text") == null){
+                break;
+                //return null;
+            }
             Message message = new Message(
                 rs.getInt("message_id"), 
                 rs.getInt("posted_by"), 

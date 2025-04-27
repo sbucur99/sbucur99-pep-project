@@ -34,7 +34,6 @@ public class SocialMediaController {
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
     public Javalin startAPI() {
-        System.out.println("TESTING!!!!!!!!!!!!!!!!!!!!");
         Javalin app = Javalin.create();        
         app.post("/register", this::postRegisterHandler);
         app.post("/login", this::postAccountHandler);
@@ -118,17 +117,18 @@ public class SocialMediaController {
 
     
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException, SQLException {
-        int id = Integer.parseInt(ctx.pathParam("message_id"));
-     
-        ctx.json(messageService.getMessageById(id));
+        String id = ctx.pathParam("message_id");
+        
+        Message message = messageService.getMessageById(Integer.parseInt(id));
+        ctx.json(message);
     }
 
     private void getMessagesByUserIdHandler(Context ctx) throws JsonProcessingException, SQLException {
         String id = ctx.pathParam("user_id");
         
        // if (id != null){            
-            List<Message> messages = messageService.getAllMessagesByUserId(Integer.valueOf(id));
-            ctx.json(messages);
+        List<Message> messages = messageService.getAllMessagesByUserId(Integer.valueOf(id));
+        ctx.json(messages);
         //}
         
     }
