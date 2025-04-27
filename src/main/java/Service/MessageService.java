@@ -1,6 +1,7 @@
 package Service;
 
 import Model.Message;
+import DAO.AccountDAO;
 import DAO.MessageDAO;
 
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import java.util.List;
 
 public class MessageService {
     public MessageDAO messageDAO;
+    public AccountDAO accountDAO;
 
     public MessageService (){
         messageDAO = new MessageDAO();
@@ -19,7 +21,7 @@ public class MessageService {
     }
 
     public Message createMessage(Message message) throws SQLException{
-        if (messageDAO.getMessageById(message.getMessage_id()) != null){
+        if (messageDAO.getMessageById(message.getMessage_id()) != null || messageDAO.getMessageById(message.getPosted_by()) == null){
             return null;
         } else {
             Message persistedMessage = messageDAO.createMessage(message);
@@ -49,6 +51,9 @@ public class MessageService {
 
     public List<Message> getAllMessagesByUserId(int user_id) throws SQLException{
         List<Message> messages = new ArrayList<>();
+        if (user_id <= 0){
+            return null;
+        }
         messages = messageDAO.getAllMessagesByUserId(user_id);
         return messages;
     }
