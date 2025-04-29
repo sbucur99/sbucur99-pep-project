@@ -18,13 +18,12 @@ public class AccountService {
     
 
     public Account register(Account account) throws SQLException{
-        if (accountDAO.register(account.username, account.password) != null){
-            return accountDAO.register(account.username, account.password);
-        } 
-        return null;        
+        Account persistedAccount = register(account);
+        return persistedAccount;
+     
     }
 
     public Account login(Account account) throws SQLException{
-        return accountDAO.login(account.username, account.password);
+        return accountDAO.login(account);
     }
 }

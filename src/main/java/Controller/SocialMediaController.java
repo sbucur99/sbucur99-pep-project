@@ -48,6 +48,12 @@ public class SocialMediaController {
         return app;
     }
     
+    /**
+     * Sends the body of a JSON account without the id to the database for registration of a user
+     * @param ctx
+     * @throws JsonProcessingException
+     * @throws SQLException
+     */
     private void postRegisterHandler(Context ctx) throws JsonProcessingException, SQLException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -59,6 +65,12 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Sends the body of a JSON account without the id to login the user
+     * @param ctx
+     * @throws JsonProcessingException
+     * @throws SQLException
+     */
     private void postAccountHandler(Context ctx) throws JsonProcessingException, SQLException{
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -124,10 +136,10 @@ public class SocialMediaController {
     }
 
     private void getMessagesByUserIdHandler(Context ctx) throws JsonProcessingException, SQLException {
-        String id = ctx.pathParam("user_id");
+        //String id = ctx.pathParam("user_id");
         
        // if (id != null){            
-        List<Message> messages = messageService.getAllMessagesByUserId(Integer.valueOf(id));
+        List<Message> messages = messageService.getAllMessagesByUserId(account);
         ctx.json(messages);
         //}
         
