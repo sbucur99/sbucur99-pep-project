@@ -20,14 +20,14 @@ public class MessageService {
         this.messageDAO = messageDAO;
     }
 
-    public Message createMessage(Message message) throws SQLException{
+  /* /  public Message createMessage(Message message) throws SQLException{
         if (messageDAO.getMessageById(message.getMessage_id()) != null || messageDAO.getMessageById(message.getPosted_by()) == null){
             return null;
         } else {
             Message persistedMessage = messageDAO.createMessage(message);
             return persistedMessage;
         }
-    }
+    }*/
  
     public Message deleteMessageById(int id) throws SQLException{
         Message persistedMessage = messageDAO.deleteMessageById(id);
@@ -49,10 +49,10 @@ public class MessageService {
         return messageDAO.getMessageById(message);
     }
 
-    public List<Message> getAllMessagesByUserId(Account account) throws SQLException{
+   /*public List<Message> getAllMessagesByUserId(Account account) throws SQLException{
         List<Message> messages = new ArrayList<>();
     
         messages = messageDAO.getAllMessagesByUserId(account);
         return messages;
-    }
+    }*/
 }
