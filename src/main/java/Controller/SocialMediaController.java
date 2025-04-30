@@ -21,18 +21,18 @@ import java.util.List;
  */
 public class SocialMediaController {
 
-   /* AccountService accountService;
+    AccountService accountService;
     MessageService messageService;
 
     public SocialMediaController(){
         this.accountService = new AccountService();
         this.messageService = new MessageService();
     }
-    /
+    /** 
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
-     /
+     */
     public Javalin startAPI() {
         Javalin app = Javalin.create();        
         app.post("/register", this::postRegisterHandler);
@@ -48,12 +48,12 @@ public class SocialMediaController {
         return app;
     }
     
-    /*
+    /**
      * Sends the body of a JSON account without the id to the database for registration of a user
      * @param ctx
      * @throws JsonProcessingException
      * @throws SQLException
-     /
+     */
     private void postRegisterHandler(Context ctx) throws JsonProcessingException, SQLException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -65,12 +65,12 @@ public class SocialMediaController {
         }
     }
 
-    /*
+    /**
      * Sends the body of a JSON account without the id to login the user
      * @param ctx
      * @throws JsonProcessingException
      * @throws SQLException
-     /
+     */
     private void postAccountHandler(Context ctx) throws JsonProcessingException, SQLException{
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
@@ -98,9 +98,10 @@ public class SocialMediaController {
     }
 
     private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException, SQLException{
-        int id = Integer.parseInt(ctx.pathParam("message_id"));
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
        
-        Message deletedMessage = messageService.deleteMessageById(id);            
+        Message deletedMessage = messageService.deleteMessageById(message);            
         ctx.status(200);
 
         if(deletedMessage != null){
@@ -109,14 +110,14 @@ public class SocialMediaController {
     }
     
     private void updateMessageHandler(Context ctx) throws JsonProcessingException, SQLException{
-        int id = Integer.parseInt(ctx.pathParam("message_id"));
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
+
         if (message == null || message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255){
             ctx.status(400);
             return;
         }
-        Message updatedMessage = messageService.updateMessage(message.getMessage_text(), message.getMessage_id());
+        Message updatedMessage = messageService.updateMessage(message);
         if (updatedMessage != null){
             ctx.json(mapper.writeValueAsString(updatedMessage)); //default 200
         } 
@@ -129,22 +130,27 @@ public class SocialMediaController {
 
     
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException, SQLException {
-        String id = ctx.pathParam("message_id");
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
         
-        Message message = messageService.getMessageById(Integer.parseInt(id));
-        ctx.json(message);
+        Message retrievedMessage = messageService.getMessageById(message);
+        if (retrievedMessage != null){
+            ctx.json(mapper.writeValueAsString(retrievedMessage)); //default 200
+        } 
     }
 
     private void getMessagesByUserIdHandler(Context ctx) throws JsonProcessingException, SQLException {
         //String id = ctx.pathParam("user_id");
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
         
-       // if (id != null){            
         List<Message> messages = messageService.getAllMessagesByUserId(account);
-        ctx.json(messages);
-        //}
+
+        if (messages != null){
+            ctx.json(mapper.writeValueAsString(messages)); //default 200
+             
+        }
         
     }
-
-*/
 
 }

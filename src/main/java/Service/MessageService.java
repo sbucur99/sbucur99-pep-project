@@ -1,6 +1,7 @@
 package Service;
 
 import Model.Message;
+import Model.Account;
 import DAO.AccountDAO;
 import DAO.MessageDAO;
 
@@ -47,10 +48,10 @@ public class MessageService {
         return messageDAO.getMessageById(message);
     }
 
-   /*public List<Message> getAllMessagesByUserId(Account account) throws SQLException{
+   public List<Message> getAllMessagesByUserId(Account account) throws SQLException{
         List<Message> messages = new ArrayList<>();
     
         messages = messageDAO.getAllMessagesByUserId(account);
         return messages;
-    }*/
+    }
 }

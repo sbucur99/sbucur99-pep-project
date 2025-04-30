@@ -58,7 +58,7 @@ public class MessageDAO {
 
 
     /**
-     * Creates message by inserting the object values
+     * Creates message by inserting the JSON object values into db
      * @param message
      * @return the Message object that was created or null
      * @throws SQLException
@@ -69,7 +69,15 @@ public class MessageDAO {
         if (message.getMessage_text() == null || message.getMessage_text().isBlank() || message.getMessage_text().length() >= 255) {
             return null;
         }
-    
+
+        String sqlCheck = "SELECT * FROM account WHERE account_id = ?;" ;
+        PreparedStatement preparedStatementCheck = connection.prepareStatement(sqlCheck);
+        preparedStatementCheck.setInt(1, message.getPosted_by());
+        ResultSet rsCheck = preparedStatementCheck.executeQuery();
+        if (!rsCheck.next()){
+            return null;
+        }
+
         String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?);" ;
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -109,6 +117,15 @@ public class MessageDAO {
      */
     public Message updateMessage(Message message) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
+
+        String sqlCheck = "SELECT * FROM message WHERE message_id = ?;";
+        PreparedStatement preparedStatementCheck = connection.prepareStatement(sqlCheck);
+        preparedStatementCheck.setInt(1, message.getMessage_id());
+        ResultSet rsCheck = preparedStatementCheck.executeQuery();
+        if (!rsCheck.next()){
+            
+        }
+
         String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
