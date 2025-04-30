@@ -43,7 +43,7 @@ public class SocialMediaController {
 
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
-        app.get("/accounts/{account_id}/messsages", this::getMessagesByUserIdHandler);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByUserIdHandler);
         //app.start(8080);
         return app;
     }
@@ -98,29 +98,30 @@ public class SocialMediaController {
     }
 
     private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException, SQLException{
-        ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(ctx.body(), Message.class);
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
        
-        Message deletedMessage = messageService.deleteMessageById(message);            
-        ctx.status(200);
+        Message deletedMessage = messageService.deleteMessageById(id);            
 
         if(deletedMessage != null){
-            ctx.json(deletedMessage);
+            ctx.status(200).json(deletedMessage);
+        } else {
+            ctx.status(200).result(""); //default
+
         }
     }
     
     private void updateMessageHandler(Context ctx) throws JsonProcessingException, SQLException{
-        ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(ctx.body(), Message.class);
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
 
         if (message == null || message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255){
-            ctx.status(400);
             return;
         }
         Message updatedMessage = messageService.updateMessage(message);
         if (updatedMessage != null){
             ctx.json(mapper.writeValueAsString(updatedMessage)); //default 200
-        } 
+        } else {
+            ctx.status(400);
+        }
     }
 
     public void getAllMessagesHandler(Context ctx) throws SQLException{
@@ -140,16 +141,15 @@ public class SocialMediaController {
     }
 
     private void getMessagesByUserIdHandler(Context ctx) throws JsonProcessingException, SQLException {
-        //String id = ctx.pathParam("user_id");
-        ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class);
+        int id = Integer.parseInt(ctx.pathParam("user_id"));
         
-        List<Message> messages = messageService.getAllMessagesByUserId(account);
+        
+        List<Message> messages = messageService.getAllMessagesByUserId(id);
 
-        if (messages != null){
-            ctx.json(mapper.writeValueAsString(messages)); //default 200
+        //if (messages != null){
+        ctx.json(messages); //default 200
              
-        }
+        //}
         
     }
 

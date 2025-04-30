@@ -28,14 +28,12 @@ public class MessageService {
         
     }
  
-    public Message deleteMessageById(Message message) throws SQLException{
-        Message persistedMessage = messageDAO.deleteMessageById(message);
-        return persistedMessage;
+    public Message deleteMessageById(int id) throws SQLException{
+        return messageDAO.deleteMessageById(id);
     }
 
     public Message updateMessage(Message message) throws SQLException{
-        Message persistedMessage = messageDAO.updateMessage(message);
-        return persistedMessage;
+        return messageDAO.updateMessage(message);
     }
 
     public List<Message> getAllMessages() throws SQLException{
@@ -48,10 +46,10 @@ public class MessageService {
         return messageDAO.getMessageById(message);
     }
 
-   public List<Message> getAllMessagesByUserId(Account account) throws SQLException{
+   public List<Message> getAllMessagesByUserId(int user_id) throws SQLException{
         List<Message> messages = new ArrayList<>();
     
-        messages = messageDAO.getAllMessagesByUserId(account);
+        messages = messageDAO.getAllMessagesByUserId(user_id);
         return messages;
     }
 }

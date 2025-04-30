@@ -160,13 +160,13 @@ public class MessageDAO {
      * @return the Message object that was deleted or null
      * @throws SQLException
      */
-    public Message deleteMessageById(Message message) throws SQLException {
+    public Message deleteMessageById(int id) throws SQLException {
         Connection connection = ConnectionUtil.getConnection();
 
         String sql = "SELECT * FROM message WHERE message_id = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setInt(1, message.getMessage_id());
+        preparedStatement.setInt(1, id);
 
         ResultSet rs = preparedStatement.executeQuery();
 
@@ -180,25 +180,26 @@ public class MessageDAO {
 
             String sql2 = "DELETE FROM message WHERE message_id = ?;";
             PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
-            preparedStatement2.setInt(1, message.getMessage_id());
+            preparedStatement2.setInt(1, newMessage.getMessage_id());
 
             preparedStatement2.executeUpdate();
-            return message;
-        }
+            return newMessage;
+            
+        } 
         
         return null;
     } 
 
-    public List<Message> getAllMessagesByUserId(Account account) throws SQLException{
+    public List<Message> getAllMessagesByUserId(int user_id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
-        if (account.getAccount_id() <= 0){
+        if (user_id <= 0){
             return null;
         }
         String sql = "SELECT * FROM message WHERE posted_by = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setInt(1, account.getAccount_id());
+        preparedStatement.setInt(1, user_id);
 
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()){
