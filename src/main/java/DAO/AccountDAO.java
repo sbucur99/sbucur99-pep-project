@@ -60,7 +60,7 @@ public class AccountDAO {
      * Logs in a user through post by verifying login info
      * @param username
      * @param password
-     * @return Account that gets logged in
+     * @return Account that gets logged in or null
      * @throws SQLException
      */
     public Account login(Account account) throws SQLException{

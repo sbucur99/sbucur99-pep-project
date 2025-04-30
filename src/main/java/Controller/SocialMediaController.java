@@ -49,7 +49,7 @@ public class SocialMediaController {
     }
     
     /**
-     * Sends the body of a JSON account without the id to the database for registration of a user
+     * Sends the account object without the id to the database for registration of a user
      * @param ctx
      * @throws JsonProcessingException
      * @throws SQLException
@@ -59,6 +59,7 @@ public class SocialMediaController {
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account addedAccount = accountService.register(account);
         if(addedAccount != null){
+            //ctx.json(addedAccount);
             ctx.json(mapper.writeValueAsString(addedAccount));
         } else {
             ctx.status(400);
@@ -66,7 +67,7 @@ public class SocialMediaController {
     }
 
     /**
-     * Sends the body of a JSON account without the id to login the user
+     * Sends the account object without the id to login the user
      * @param ctx
      * @throws JsonProcessingException
      * @throws SQLException
@@ -82,6 +83,12 @@ public class SocialMediaController {
         }
     }
     
+    /**
+     * Sends the message object to create a message
+     * @param ctx
+     * @throws JsonProcessingException
+     * @throws SQLException
+     */
     private void postMessageHandler(Context ctx) throws JsonProcessingException, SQLException{
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
@@ -97,60 +104,78 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Sends message id from parameter to delete the message
+     * @param ctx
+     * @throws JsonProcessingException
+     * @throws SQLException
+     */
     private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException, SQLException{
         int id = Integer.parseInt(ctx.pathParam("message_id"));
        
         Message deletedMessage = messageService.deleteMessageById(id);            
 
         if(deletedMessage != null){
-            ctx.status(200).json(deletedMessage);
-        } else {
-            ctx.status(200).result(""); //default
-
+            ctx.json(deletedMessage);
         }
     }
     
+    /**
+     * Sends message id from parameter and the message object to update the message
+     * @param ctx
+     * @throws JsonProcessingException
+     * @throws SQLException
+     */
     private void updateMessageHandler(Context ctx) throws JsonProcessingException, SQLException{
         int id = Integer.parseInt(ctx.pathParam("message_id"));
 
-        if (message == null || message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255){
-            return;
-        }
-        Message updatedMessage = messageService.updateMessage(message);
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+
+        Message updatedMessage = messageService.updateMessage(message, id);
         if (updatedMessage != null){
-            ctx.json(mapper.writeValueAsString(updatedMessage)); //default 200
+            ctx.json(mapper.writeValueAsString(updatedMessage));
         } else {
             ctx.status(400);
         }
     }
 
+    /**
+     * Retrieves a list of all the messages
+     * @param ctx
+     * @throws SQLException
+     */
     public void getAllMessagesHandler(Context ctx) throws SQLException{
         List<Message> messages = messageService.getAllMessages();
         ctx.json(messages);
     }
 
-    
+    /**
+     * Sends the message id from parameter to get the message
+     * @param ctx
+     * @throws JsonProcessingException
+     * @throws SQLException
+     */
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException, SQLException {
-        ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(ctx.body(), Message.class);
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
         
-        Message retrievedMessage = messageService.getMessageById(message);
+        Message retrievedMessage = messageService.getMessageById(id);
         if (retrievedMessage != null){
-            ctx.json(mapper.writeValueAsString(retrievedMessage)); //default 200
+            ctx.json(retrievedMessage);
         } 
     }
 
+    /**
+     * Sends account id from parameter to get a list of all messages with the account id
+     * @param ctx
+     * @throws JsonProcessingException
+     * @throws SQLException
+     */
     private void getMessagesByUserIdHandler(Context ctx) throws JsonProcessingException, SQLException {
-        int id = Integer.parseInt(ctx.pathParam("user_id"));
-        
+        int id = Integer.parseInt(ctx.pathParam("account_id"));
         
         List<Message> messages = messageService.getAllMessagesByUserId(id);
 
-        //if (messages != null){
-        ctx.json(messages); //default 200
-             
-        //}
-        
+        ctx.json(messages); 
     }
-
 }

@@ -10,6 +10,11 @@ import java.util.List;
 
 public class MessageDAO {
 
+    /**
+     * Retireves a list of all messages in the message table
+     * @return
+     * @throws SQLException
+     */
     public List<Message> getAllMessages() throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
@@ -30,20 +35,24 @@ public class MessageDAO {
         return messages;
     }
 
-
-    public Message getMessageById(Message message) throws SQLException{
+    /**
+     * Retrieves the message from the message table by the message id
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    public Message getMessageById(int id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
 
         String sql = "SELECT * FROM message WHERE message_id = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setInt(1, message.getMessage_id());
+        preparedStatement.setInt(1, id);
 
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()){
             if (rs.getString("message_text") == null){
                 break;
-                //return null;
             }
             Message newMessage = new Message(
                 rs.getInt("message_id"), 
@@ -56,9 +65,8 @@ public class MessageDAO {
         return null;
     }
 
-
     /**
-     * Creates message by inserting the JSON object values into db
+     * Creates message by inserting the object values into the message table
      * @param message
      * @return the Message object that was created or null
      * @throws SQLException
@@ -115,29 +123,25 @@ public class MessageDAO {
      * @return the Message object that is updated or null
      * @throws SQLException
      */
-    public Message updateMessage(Message message) throws SQLException{
+    public Message updateMessage(Message message, int id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
 
-        String sqlCheck = "SELECT * FROM message WHERE message_id = ?;";
-        PreparedStatement preparedStatementCheck = connection.prepareStatement(sqlCheck);
-        preparedStatementCheck.setInt(1, message.getMessage_id());
-        ResultSet rsCheck = preparedStatementCheck.executeQuery();
-        if (!rsCheck.next()){
-            
+        if (message == null || message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255){
+            return null;
         }
 
         String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
         preparedStatement.setString(1, message.getMessage_text());
-        preparedStatement.setInt(2, message.getMessage_id());
+        preparedStatement.setInt(2, id);
         
         int rowsUpdated = preparedStatement.executeUpdate();
         if (rowsUpdated > 0){
             String sql2 = "SELECT * FROM message WHERE message_id = ?";
             PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
 
-            preparedStatement.setInt(1, message.getMessage_id());
+            preparedStatement2.setInt(1, id);
 
             ResultSet rs = preparedStatement2.executeQuery();
             if (rs.next()){
@@ -155,7 +159,7 @@ public class MessageDAO {
     }
 
     /**
-     * Deletes a message by a message id
+     * Deletes a message from message table by a message id
      * @param id
      * @return the Message object that was deleted or null
      * @throws SQLException
@@ -190,31 +194,31 @@ public class MessageDAO {
         return null;
     } 
 
-    public List<Message> getAllMessagesByUserId(int user_id) throws SQLException{
+    /**
+     * Retrieves a list of all messages that have account_id
+     * @param account_id
+     * @return
+     * @throws SQLException
+     */
+    public List<Message> getAllMessagesByUserId(int account_id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
-        if (user_id <= 0){
-            return null;
-        }
+   
         String sql = "SELECT * FROM message WHERE posted_by = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setInt(1, user_id);
+        preparedStatement.setInt(1, account_id);
 
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()){
-            Message message = new Message(
+            Message newMessage = new Message(
                 rs.getInt("message_id"), 
                 rs.getInt("posted_by"), 
                 rs.getString("message_text"), 
                 rs.getInt("time_posted_epoch")
             );
-            messages.add(message);
+            messages.add(newMessage);
         }
-        if (messages.isEmpty()){
-            return null;
-        }
-     
         return messages;
     }
 }
