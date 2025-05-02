@@ -29,12 +29,15 @@ public class MessageService {
     }
 
     /**
-     * Creates a message with message object
+     * Creates a message with message object if it is not blank and within 255 characters
      * @param message
      * @return a persisted message or null
      * @throws SQLException
      */
     public Message createMessage(Message message) throws SQLException{
+        if (message.getMessage_text() == null || message.getMessage_text().isBlank() || message.getMessage_text().length() >= 255) {
+            return null;
+        }
         Message persistedMessage = messageDAO.createMessage(message);
         return persistedMessage;
     }
@@ -50,13 +53,16 @@ public class MessageService {
     }
 
     /**
-     * Updates a message by the message id
+     * Updates a message by the message id if the message is not empty and within 255 characters
      * @param message
      * @param id
      * @return a updated message or null
      * @throws SQLException
      */
     public Message updateMessage(Message message, int id) throws SQLException{
+        if (message == null || message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255){
+            return null;
+        }
         return messageDAO.updateMessage(message, id);
     }
 

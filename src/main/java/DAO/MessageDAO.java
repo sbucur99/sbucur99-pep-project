@@ -74,10 +74,6 @@ public class MessageDAO {
     public Message createMessage(Message message) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
 
-        if (message.getMessage_text() == null || message.getMessage_text().isBlank() || message.getMessage_text().length() >= 255) {
-            return null;
-        }
-
         String sqlCheck = "SELECT * FROM account WHERE account_id = ?;" ;
         PreparedStatement preparedStatementCheck = connection.prepareStatement(sqlCheck);
         preparedStatementCheck.setInt(1, message.getPosted_by());
@@ -125,10 +121,6 @@ public class MessageDAO {
      */
     public Message updateMessage(Message message, int id) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
-
-        if (message == null || message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255){
-            return null;
-        }
 
         String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);

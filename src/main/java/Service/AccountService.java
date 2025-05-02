@@ -24,12 +24,15 @@ public class AccountService {
     }
     
     /**
-     * Registers a user account in the db
+     * Registers a user account in that's unique and password at least 4 characters
      * @param account
      * @return the persisted account object
      * @throws SQLException
      */
     public Account register(Account account) throws SQLException{
+        if (account.getUsername() == null || account.getUsername().isEmpty() || account.getPassword() == null || account.getPassword().length() < 4) {
+            return null;
+        }
         Account persistedAccount = accountDAO.register(account);
         return persistedAccount;
     }

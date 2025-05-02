@@ -9,7 +9,7 @@ import java.util.List;
 
 public class AccountDAO {
     /**
-     * Registers user with username needing to be unique and password at least 4 characters
+     * Registers user with username
      * @param username
      * @param password
      * @return Account object that gets created or null if fails 
@@ -17,10 +17,6 @@ public class AccountDAO {
      */
     public Account register(Account account) throws SQLException{
         Connection connection = ConnectionUtil.getConnection();
-
-        if (account.getUsername() == null || account.getUsername().isEmpty() || account.getPassword() == null || account.getPassword().length() < 4) {
-            return null;
-        }
     
         String checkSql = "SELECT * FROM account WHERE username = ?";
         PreparedStatement checkStatement = connection.prepareStatement(checkSql);
